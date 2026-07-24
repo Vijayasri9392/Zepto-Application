@@ -36,7 +36,7 @@ function displayingProducts(products) {
                 <p class="product-title">${item.title}</p>
                 <p class="product-brand">${item.brand || "Imported"}</p>
                 <div class="product-price">
-                    <p class="discount-price">$${Math.round(item.price - (item.price * item.discountPercentage/100))}</p>
+                    <p class="discount-price">$${Math.ceil(item.price - (item.price * item.discountPercentage/100))}</p>
                     <p class="actual-price">$${item.price}</P>
                     <button class="addBtn">Add</button>
                 </div>

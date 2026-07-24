@@ -17,10 +17,26 @@ userLocation.addEventListener("click", () => {
 })
 
 //Displaying All Products
+let allProducts = []
 async function displayingProducts(){
     let response = await fetch ("https://dummyjson.com/products?limit=194")
     let {products} = await response.json()
+    allProducts = products
+    renderProducts(allProducts)
+    let searchBar = document.querySelector("#products-section-1>input")
+    searchBar.addEventListener("input",(e) =>{
+        let searchValue = e.target.value.trim().toLowerCase()
+        let filteredProducts = allProducts.filter((item)=>{
+            return item.title.trim().toLowerCase().includes(searchValue)
+        })
+        renderProducts(filteredProducts)
+    })
+}
+displayingProducts()
+
+function renderProducts(products){
     let productsSection = document.getElementById("products-section-2")
+    productsSection.innerHTML=""
       products.forEach((item) => {
         productsSection.innerHTML += `
     <article class="product-cards">
@@ -35,7 +51,7 @@ async function displayingProducts(){
                 <p class="product-title">${item.title}</p>
                 <p class="product-brand">${item.brand || "Imported"}</p>
                 <div class="product-price">
-                    <p class="discount-price">$${Math.round(item.price - (item.price * item.discountPercentage/100))}</p>
+                    <p class="discount-price">$${Math.ceil(item.price - (item.price * item.discountPercentage/100))}</p>
                     <p class="actual-price">$${item.price}</P>
                     <button class="addBtn">Add</button>
                 </div>
@@ -45,8 +61,7 @@ async function displayingProducts(){
 
         })
         wishlistIcon()
-    }
-displayingProducts()
+}
 
 //! Wishlist
 function wishlistIcon(){

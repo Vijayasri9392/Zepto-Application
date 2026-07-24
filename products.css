@@ -118,12 +118,12 @@ nav {
   width: 90%;
   min-height: 2.5rem;
   border-radius: 20px;
-  border: 1px solid rgba(0, 0, 0, 0.315);
+  border: 1px solid rgba(0, 0, 0, 0.514);
   padding: 0px 3rem;
 }
 #products-section-1 > i {
   position: absolute;
-  top: 37px;
+  top: 22px;
   left: 54px;
 }
 #products-section-1 > a {
