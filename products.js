@@ -38,6 +38,9 @@ function renderProducts(products){
     let productsSection = document.getElementById("products-section-2")
     productsSection.innerHTML=""
       products.forEach((item) => {
+        let finalPrice = Math.ceil(item.price - (item.price * item.discountPercentage/100))
+        let qty = getProductQuantity(item.id)
+        // console.log(qty)
         productsSection.innerHTML += `
     <article class="product-cards">
             <div class="product-card-one">
@@ -51,9 +54,18 @@ function renderProducts(products){
                 <p class="product-title">${item.title}</p>
                 <p class="product-brand">${item.brand || "Imported"}</p>
                 <div class="product-price">
-                    <p class="discount-price">$${Math.ceil(item.price - (item.price * item.discountPercentage/100))}</p>
+                    <p class="discount-price">$${finalPrice}</p>
                     <p class="actual-price">$${item.price}</P>
-                    <button class="addBtn">Add</button>
+
+                    ${qty == 0 ? `<button class="addBtn" data-id=${item.id} data-title = ${item.title} data-price = ${finalPrice} data-img=${item.thumbnail}>Add</button>`
+                    :`
+                    <div class="addBtnQtyContainer">
+                        <button class="decrementBtn quantity-btn" data-id=${item.id}>-</button>
+                        <span>${qty}</span>
+                        <button class="incrementBtn quantity-btn" data-id=${item.id}>+</button>
+                    </div>
+                        `
+                    }
                 </div>
                 <p class="ratings"><i class="fa-solid fa-star"></i>${item.rating} (${item.stock})</p>
             </div>
@@ -61,15 +73,60 @@ function renderProducts(products){
 
         })
         wishlistIcon()
+        addButtonEvents()
+        increaseButtonEvents()
+        decreaseButtonEvents()
+        
 }
 
 //! Wishlist
 function wishlistIcon(){
     let wishListIcons = document.querySelectorAll(".wishlist>i")
     wishListIcons.forEach((item) => {
-    console.log(item)
+    // console.log(item)
     item.addEventListener("click", () => {
         item.classList.toggle("clicked")
     })
 })
+}
+
+// Add Button Events
+function addButtonEvents(){
+    let addBtn = document.querySelectorAll(".addBtn")
+    addBtn.forEach((btn)=>{
+        // console.dir(btn)
+        btn.addEventListener("click", () =>{
+            let product ={
+                id: Number(btn.dataset.id),
+                title: btn.dataset.title,
+                price:Number(btn.dataset.price),
+                img: btn.dataset.img
+            }
+            addToCart(product)
+            renderProducts(allProducts)
+        })
+    })
+
+}
+
+// Increase Button Events
+
+function increaseButtonEvents(){
+    let increaseBtns = document.querySelectorAll(".incrementBtn")
+    increaseBtns.forEach((btn)=>{
+        btn.addEventListener("click",()=>{
+            incrementQuantity(Number(btn.dataset.id))
+            renderProducts(allProducts)
+        })
+    })
+}
+
+function decreaseButtonEvents(){
+    let decreaseBtns = document.querySelectorAll(".decrementBtn")
+    decreaseBtns.forEach((btn)=>{
+        btn.addEventListener("click",()=>{
+            decrementQuantity(Number(btn.dataset.id))
+            renderProducts(allProducts)
+        })
+    })
 }
